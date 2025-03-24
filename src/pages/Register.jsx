@@ -40,6 +40,7 @@ function reducer2(state, action) {
 function Register({}) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [msgRespuesta, setMsgRespuesta] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [stateBtnsPassword, dispatch2] = useReducer(
     reducer2,
@@ -132,7 +133,7 @@ function Register({}) {
     return errores;
   };
 
-  // 🔷 Enviar formulario
+  // 🚀 Enviar formulario
   const enviarFormulario = async (e) => {
     e.preventDefault();
 
@@ -166,6 +167,7 @@ function Register({}) {
 
     // 🚀 Envío de datos al backend
     try {
+      setLoading(true);
       const response = await axios.post(
         `${VITE_BACKEND_URL}/register`,
         stateSinPassword2
@@ -178,6 +180,8 @@ function Register({}) {
       }
     } catch (error) {
       setMsgRespuesta("Incorrect register: " + error.response.data.err); // ❌
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -389,6 +393,7 @@ function Register({}) {
               ))}
           </div>
           <div className="text-center">
+            <p>{loading && "Cargando..."}</p>
             <p>{msgRespuesta}</p>
           </div>
           <div className="!flex-row justify-center items-center gap-x-8 flex-wrap">

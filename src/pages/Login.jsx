@@ -24,6 +24,7 @@ function Login({}) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [error, setError] = useState(null);
   const [isPassShown, setIsPassShown] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     dispatch({
@@ -49,6 +50,7 @@ function Login({}) {
       password: state.password,
     };
     try {
+      setLoading(true);
       const response = await axios.post(`${VITE_BACKEND_URL}/login`, userData);
       if (response.status === 200) {
         // ✅ Respuesta correcta
@@ -83,6 +85,8 @@ function Login({}) {
         console.error("Error setting up request:", error.message);
         setError("Error in request setup.");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -199,8 +203,9 @@ function Login({}) {
             >
               Autocomplete
             </button>
-            {/* Mensaje errores */}
           </div>
+          {/* Mensaje errores/cargando */}
+          {loading && <span>{"Cargando..."}</span>}
           {error && <span className="text-red-500">{error}</span>}
         </form>
       </div>
