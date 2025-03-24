@@ -5,7 +5,7 @@ import Login from "./pages/Login";
 import Logout from "./pages/Logout";
 import Register from "./pages/Register";
 import MovieDetail from "./components/MovieDetail"; // también es una page, aunque generada
-import NotFound from "./pages/NotFound"; // Asegúrate de tener un componente de error 404
+import NotFound from "./pages/NotFound";
 
 const App = () => {
   return (
