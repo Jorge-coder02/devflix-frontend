@@ -20,7 +20,6 @@ function Home() {
   const [filtro, setFiltro] = useState("");
   const handleChange = (value) => {
     setFiltro(value);
-    console.log(value);
   };
   return (
     <div className="flex justify-center min-h-[100dvh] py-4">

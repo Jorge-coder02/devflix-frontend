@@ -10,7 +10,6 @@ function MoviesList({ filtro }) {
   useEffect(() => {
     fetchMovies().then((data) => {
       setMovies(data);
-      console.log(data);
     });
   }, []);
 
