@@ -20,9 +20,9 @@ function reducer(state, action) {
 }
 
 function Login({}) {
+  const navigate = useNavigate();
   const [state, dispatch] = useReducer(reducer, initialState);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
   const [isPassShown, setIsPassShown] = useState(false);
 
   const handleChange = (e) => {
@@ -39,29 +39,29 @@ function Login({}) {
     dispatch({ field: "password", value: "12345%validar2" });
   };
 
+  // 🚀 Función envío de formulario
   const enviarFormulario = async (e) => {
     e.preventDefault();
-    // enviar formulario
-    console.log("Sending: ", state);
+
+    // Enviar formulario
     const userData = {
       email: state.email,
       password: state.password,
     };
     try {
-      // ✅ Respuesta correcta
       const response = await axios.post(`${VITE_BACKEND_URL}/login`, userData);
-      console.log(response);
-      const jwt = response.data.token;
-      console.log("Token: ", jwt);
       if (response.status === 200) {
-        console.log("Login successful");
+        // ✅ Respuesta correcta
+        const jwt = response.data.token;
+        if (jwt) {
+          localStorage.setItem("token", jwt); // Guardar el token en localStorage
+        }
+        setError(null); // limpio errores
+        navigate("/"); // redirijo a la ruta Home
       } else if (response.status === 400) {
         // ❌ Respuesta incorrecta
         console.log("Incorrect login");
       }
-      localStorage.setItem("token", jwt); // Guardar el token en localStorage
-      setError(null); // limpio errores
-      navigate("/"); // redirijo a la ruta Home
 
       // ❌ Manejo de errores
     } catch (error) {
