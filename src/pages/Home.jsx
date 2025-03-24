@@ -4,23 +4,17 @@ import { Link } from "react-router-dom";
 import SearchBar from "../components/SearchBar.jsx";
 import { useState, useEffect } from "react";
 import NavBarLinks from "../components/NavBarLinks.jsx";
+import useAuth from "../hooks/useAuth.jsx";
 
 function Home() {
-  const [authenticated, setAuthenticated] = useState(false); // 👤
-
   // 👤 Comprobar token Inicio Sesión
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (token) {
-      setAuthenticated(true);
-    }
-  }, []);
+  const authenticated = useAuth();
 
   const [filtro, setFiltro] = useState("");
   const handleChange = (value) => {
     setFiltro(value);
   };
+
   return (
     <div className="flex justify-center min-h-[100dvh] py-4">
       {authenticated ? (

@@ -1,6 +1,7 @@
 import { useReducer, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBarLinks from "../components/NavBarLinks";
+import useAuth from "../hooks/useAuth";
 
 import axios from "axios";
 import { Link } from "react-router-dom";
@@ -21,6 +22,15 @@ function reducer(state, action) {
 
 function Login({}) {
   const navigate = useNavigate();
+  // 👤 Comprobar token Inicio Sesión
+  const authenticated = useAuth();
+
+  useEffect(() => {
+    if (authenticated) {
+      navigate("/");
+    }
+  }, [authenticated, navigate]);
+
   const [state, dispatch] = useReducer(reducer, initialState);
   const [error, setError] = useState(null);
   const [isPassShown, setIsPassShown] = useState(false);
@@ -93,8 +103,7 @@ function Login({}) {
   return (
     <div className="bg-base-100 flex justify-center items-center ">
       {/* Enlaces */}
-
-      <NavBarLinks ruta_actual="/"></NavBarLinks>
+      <NavBarLinks ruta_actual="/login"></NavBarLinks>
 
       {/* Formulario */}
       <div className="mt-16 w-full md:w-2/4 pt-12 pb-20 gap-y-6 rounded-lg shadow-lg bg-base-200">

@@ -1,8 +1,9 @@
 import React from "react";
-import { useReducer, useState, useRef } from "react";
-import { Link } from "react-router-dom";
+import { useReducer, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import NavBarLinks from "../components/NavBarLinks";
+import useAuth from "../hooks/useAuth";
 
 const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -38,6 +39,16 @@ function reducer2(state, action) {
 }
 
 function Register({}) {
+  const navigate = useNavigate();
+  // 👤 Comprobar token Inicio Sesión
+  const authenticated = useAuth();
+
+  useEffect(() => {
+    if (authenticated) {
+      navigate("/");
+    }
+  }, [authenticated, navigate]);
+
   const [state, dispatch] = useReducer(reducer, initialState);
   const [msgRespuesta, setMsgRespuesta] = useState("");
   const [loading, setLoading] = useState(false);

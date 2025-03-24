@@ -3,11 +3,15 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import NavBarLinks from "./NavBarLinks";
+import useAuth from "../hooks/useAuth";
 
 const API_URL = import.meta.env.VITE_URL_BASE;
 const API_KEY = import.meta.env.VITE_API_KEY;
 
 function MovieDetail() {
+  // 👤 Comprobar token Inicio Sesión
+  const authenticated = useAuth();
+
   const { id } = useParams();
   const [movie, setMovie] = useState(null);
   const [videoKey, setVideoKey] = useState(null);
@@ -53,18 +57,22 @@ function MovieDetail() {
       });
   }, [id]);
 
-  useEffect(() => {
-    console.log(movie);
-    console.log(videoKey);
-  }, [movie, videoKey]);
-
   if (!movie) {
     return <p className="bg-base-100">Loading...</p>;
   }
 
   return (
     <div className="my-10 bg-base-100 p-4 flex flex-col items-center gap-y-10">
-      <NavBarLinks ruta_actual="/no_navegable"></NavBarLinks>
+      {authenticated ? (
+        <div>
+          <span className="flex gap-x-4 absolute top-0 right-0  pr-8 lg:pr-36 pt-6">
+            <Link to="/">Home</Link>
+            <Link to="/logout">Log Out</Link>
+          </span>
+        </div>
+      ) : (
+        <NavBarLinks ruta_actual="/"></NavBarLinks>
+      )}
       <h1 className="text-3xl">Film details</h1>
 
       {/* Contenedor principal cuadro */}
