@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import NavBarLinks from "../components/NavBarLinks";
 import useAuth from "../hooks/useAuth";
+import Spinner from "../features/Spinner";
 
 const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -52,6 +53,7 @@ function Register({}) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [msgRespuesta, setMsgRespuesta] = useState("");
   const [loading, setLoading] = useState(false);
+  const [longLoading, setLongLoading] = useState(false);
 
   const [stateBtnsPassword, dispatch2] = useReducer(
     reducer2,
@@ -144,6 +146,20 @@ function Register({}) {
     return errores;
   };
 
+  const handleLoading = async () => {
+    setLoading(true); // Mostrar msg Cargando...
+    setLongLoading(false); // Ocultar msg de carga prolongada
+    // cuando lleve 5 segundos, mostrar otro mensaje
+    setTimeout(() => {
+      setLoading((prev_loading) => {
+        if (prev_loading) {
+          setLongLoading(true); // Mostrar msg cargando largo
+        }
+        return prev_loading;
+      });
+    }, 5000);
+  };
+
   // 🚀 Enviar formulario
   const enviarFormulario = async (e) => {
     e.preventDefault();
@@ -178,7 +194,8 @@ function Register({}) {
 
     // 🚀 Envío de datos al backend
     try {
-      setLoading(true);
+      setMsgRespuesta(""); // Limpiar mensaje respuesta
+      handleLoading();
       const response = await axios.post(
         `${VITE_BACKEND_URL}/register`,
         stateSinPassword2
@@ -193,6 +210,7 @@ function Register({}) {
       setMsgRespuesta("Incorrect register: " + error.response.data.err); // ❌
     } finally {
       setLoading(false);
+      setLongLoading(false);
     }
   };
 
@@ -404,7 +422,16 @@ function Register({}) {
               ))}
           </div>
           <div className="text-center">
-            <p>{loading && "Cargando..."}</p>
+            {loading && (
+              <>
+                <p> Cargando...</p>
+                <Spinner color="border-white" text_color="text-white"></Spinner>
+              </>
+            )}
+            <span>
+              {longLoading &&
+                "El primer uso de la web en el día puede tomar hasta 25 segundos..."}
+            </span>
             <p>{msgRespuesta}</p>
           </div>
           <div className="!flex-row justify-center items-center gap-x-8 flex-wrap">
