@@ -2,6 +2,7 @@ import { useReducer, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBarLinks from "../components/NavBarLinks";
 import useAuth from "../hooks/useAuth";
+import Spinner from "../features/Spinner";
 
 import axios from "axios";
 import { Link } from "react-router-dom";
@@ -35,6 +36,7 @@ function Login({}) {
   const [error, setError] = useState(null);
   const [isPassShown, setIsPassShown] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [longLoading, setLongLoading] = useState(false);
 
   const handleChange = (e) => {
     dispatch({
@@ -48,6 +50,20 @@ function Login({}) {
     // auto completar
     dispatch({ field: "email", value: "userdefault@devflix.com" });
     dispatch({ field: "password", value: "12345%validar2" });
+  };
+
+  const handleLoading = async () => {
+    setLoading(true); // Mostrar msg Cargando...
+    setLongLoading(false); // Ocultar msg de carga prolongada
+    // cuando lleve 5 segundos, mostrar otro mensaje
+    setTimeout(() => {
+      setLoading((prev_loading) => {
+        if (prev_loading) {
+          setLongLoading(true); // Mostrar msg cargando largo
+        }
+        return prev_loading;
+      });
+    }, 5000);
   };
 
   // 🚀 Función envío de formulario
@@ -214,7 +230,16 @@ function Login({}) {
             </button>
           </div>
           {/* Mensaje errores/cargando */}
-          {loading && <span>{"Cargando..."}</span>}
+          {loading && (
+            <>
+              <p> Cargando...</p>
+              <Spinner color="border-white" text_color="text-white"></Spinner>
+            </>
+          )}
+          <span>
+            {longLoading &&
+              "El primer uso de la web en el día puede tomar hasta 25 segundos"}
+          </span>
           {error && <span className="text-red-500">{error}</span>}
         </form>
       </div>

@@ -430,7 +430,7 @@ function Register({}) {
             )}
             <span>
               {longLoading &&
-                "El primer uso de la web en el día puede tomar hasta 25 segundos..."}
+                "El primer uso de la web en el día puede tomar hasta 25 segundos"}
             </span>
             <p>{msgRespuesta}</p>
           </div>
